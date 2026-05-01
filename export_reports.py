@@ -12,7 +12,7 @@ BG_MID  = "#2471A3"
 WHITE   = "#FFFFFF"
 
 # Load config
-BASE_DIR = r"C:\AttendanceSystem"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = os.path.join(BASE_DIR, "config.json")
 
 def load_config():
@@ -25,9 +25,6 @@ def load_config():
 
 CONFIG = load_config()
 
-# Use install_path from config if available
-if CONFIG and CONFIG.get('install_path'):
-    BASE_DIR = CONFIG['install_path']
 
 REPORTS_DIR = os.path.join(BASE_DIR, "Reports")
 ARCHIVE_DIR = os.path.join(BASE_DIR, "Archive")
