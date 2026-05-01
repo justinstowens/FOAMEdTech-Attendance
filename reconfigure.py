@@ -5,7 +5,7 @@ import os
 import copy
 
 # File paths
-BASE_DIR = r"C:\AttendanceSystem"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = os.path.join(BASE_DIR, "config.json")
 
 # Colors
