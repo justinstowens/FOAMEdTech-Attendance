@@ -7,7 +7,7 @@ import json
 from datetime import datetime
 
 # File paths
-BASE_DIR = r"C:\AttendanceSystem"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ATTENDANCE_FILE = os.path.join(BASE_DIR, "attendance_log.csv")
 CONFIG_FILE = os.path.join(BASE_DIR, "config.json")
 
