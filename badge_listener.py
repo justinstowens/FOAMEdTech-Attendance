@@ -12,7 +12,7 @@ from datetime import datetime
 from threading import Thread
 
 # File paths
-BASE_DIR = r"C:\AttendanceSystem"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROSTER_FILE = os.path.join(BASE_DIR, "roster.csv")
 ATTENDANCE_FILE = os.path.join(BASE_DIR, "attendance_log.csv")
 CONFIG_FILE = os.path.join(BASE_DIR, "config.json")
