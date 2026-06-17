@@ -299,6 +299,18 @@ class BadgeListenerApp:
         self.clock_label.config(text=datetime.now().strftime('%I:%M %p'))
         self.root.after(1000, self.update_clock)
 
+    def _clear_input_buffer(self):
+        if self.current_input:
+            beep_unknown()
+            self.root.after(0, lambda: self.add_log_entry(
+                datetime.now().strftime('%I:%M %p'),
+                'Invalid badge format', '', '',
+                '⚠ Ignored',
+                YELLOW
+            ))
+        self.current_input = ""
+        self._clear_timer = None
+
     def start_listener(self):
         thread = Thread(target=self.run_listener, daemon=True)
         thread.start()
@@ -309,9 +321,35 @@ class BadgeListenerApp:
                 return
 
             if event.name.isdigit():
+                # Cancel any existing timeout
+                if hasattr(self, '_clear_timer') and self._clear_timer:
+                    self._clear_timer.cancel()
+
                 self.current_input += event.name
 
+                # If too many digits, clear immediately
+                if len(self.current_input) > self.badge_id_length:
+                    self.current_input = ""
+                    self._clear_timer = None
+                    beep_unknown()
+                    self.root.after(0, lambda: self.add_log_entry(
+                        datetime.now().strftime('%I:%M %p'),
+                        'Invalid badge format', '', '',
+                        '⚠ Ignored',
+                        YELLOW
+                    ))
+                    return
+
+                # Set a timeout to clear buffer if no more digits arrive
+                import threading
+                self._clear_timer = threading.Timer(0.5, self._clear_input_buffer)
+                self._clear_timer.start()
+
                 if len(self.current_input) == self.badge_id_length:
+                    # Cancel the timeout since we have a complete ID
+                    if self._clear_timer:
+                        self._clear_timer.cancel()
+                        self._clear_timer = None
                     badge_id = self.current_input
                     self.current_input = ""
                     time_in = datetime.now()
